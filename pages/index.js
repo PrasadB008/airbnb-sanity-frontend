@@ -1,6 +1,6 @@
 import { sanityClient, urlFor } from "../sanity"
 import Link from "next/link"
-import { isMultiple } from "../utils"
+import { pluralSuffix } from "../utils"
 import DashboardMap from "../components/DashboardMap"
 
 const Home = ({ properties }) => {
@@ -18,7 +18,7 @@ const Home = ({ properties }) => {
                     <img src={urlFor(property.mainImage)} />
                     <p>
                       {property.reviews.length} review
-                      {isMultiple(property.reviews.length)}
+                      {pluralSuffix(property.reviews.length)}
                     </p>
                     <h3>{property.title}</h3>
                     <h3>
