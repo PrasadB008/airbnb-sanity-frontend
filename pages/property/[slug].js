@@ -1,5 +1,5 @@
 import { sanityClient } from "../../sanity"
-import { isMultiple } from "../../utils"
+import { pluralSuffix } from "../../utils"
 import Image from "../../components/Image"
 import Review from "../../components/Review"
 import Map from "../../components/Map"
@@ -27,7 +27,7 @@ const Property = ({
         <b>{title}</b>
       </h1>
       <p>
-        {reviewAmount} review{isMultiple(reviewAmount)}
+        {reviewAmount} review{pluralSuffix(reviewAmount)}
       </p>
       <div className="images-section">
         <Image identifier="main-image" image={mainImage} />
@@ -46,8 +46,8 @@ const Property = ({
             </b>
           </h2>
           <h4>
-            {bedrooms} bedroom{isMultiple(bedrooms)} * {beds} bed
-            {isMultiple(beds)}
+            {bedrooms} bedroom{pluralSuffix(bedrooms)} * {beds} bed
+            {pluralSuffix(beds)}
           </h4>
           <hr />
           <h4>
@@ -74,7 +74,7 @@ const Property = ({
         <div className="price-box">
           <h2>£{pricePerNight}</h2>
           <h4>
-            {reviewAmount} review{isMultiple(reviewAmount)}
+            {reviewAmount} review{pluralSuffix(reviewAmount)}
           </h4>
           <Link href="/">
             <div className="button">Change Dates</div>
@@ -89,7 +89,7 @@ const Property = ({
       <hr />
 
       <h2>
-        {reviewAmount} review{isMultiple(reviewAmount)}
+        {reviewAmount} review{pluralSuffix(reviewAmount)}
       </h2>
       {reviewAmount > 0 &&
         reviews.map((review) => <Review key={review._key} review={review} />)}

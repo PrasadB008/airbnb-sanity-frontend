@@ -1,27 +1,36 @@
-import { isMultiple } from "./utils"
+import { pluralSuffix, isMultiple } from "./utils"
 
-describe("isMultiple", () => {
+describe("pluralSuffix", () => {
   it("returns 's' for 0", () => {
-    expect(isMultiple(0)).toBe("s")
+    expect(pluralSuffix(0)).toBe("s")
   })
 
   it("returns '' for 1", () => {
-    expect(isMultiple(1)).toBe("")
+    expect(pluralSuffix(1)).toBe("")
   })
 
   it("returns 's' for 2", () => {
-    expect(isMultiple(2)).toBe("s")
+    expect(pluralSuffix(2)).toBe("s")
   })
 
   it("treats negative numbers like positives", () => {
-    expect(isMultiple(-1)).toBe("")
-    expect(isMultiple(-2)).toBe("s")
+    expect(pluralSuffix(-1)).toBe("")
+    expect(pluralSuffix(-2)).toBe("s")
   })
 
   it("returns 's' for non-numbers", () => {
-    expect(isMultiple(undefined)).toBe("s")
-    expect(isMultiple(null)).toBe("s")
-    expect(isMultiple("1")).toBe("s")
-    expect(isMultiple(NaN)).toBe("s")
+    expect(pluralSuffix(undefined)).toBe("s")
+    expect(pluralSuffix(null)).toBe("s")
+    expect(pluralSuffix("1")).toBe("s")
+    expect(pluralSuffix(NaN)).toBe("s")
+  })
+})
+
+describe("isMultiple (deprecated alias)", () => {
+  it("returns the same result as pluralSuffix", () => {
+    const inputs = [0, 1, 2, -1, -2, undefined, null, "1", NaN]
+    inputs.forEach((input) => {
+      expect(isMultiple(input)).toBe(pluralSuffix(input))
+    })
   })
 })
