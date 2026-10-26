@@ -7,17 +7,19 @@ const DashboardMap = ({ properties }) => {
     googleMapsApiKey: process.env.googlePlacesAPI,
   })
 
-  console.log(properties[0].location?.lat)
-  console.log(properties[0].location?.lat)
   const containerStyle = {
     width: "100%",
     height: "100vh",
   }
 
-  const center = {
-    lat: properties[0].location?.lat,
-    lng: properties[0].location?.lng,
-  }
+  // Fallback center used when there are no properties (San Francisco)
+  const defaultCenter = { lat: 37.7749, lng: -122.4194 }
+
+  const firstLocation = properties?.[0]?.location
+  const center =
+    firstLocation?.lat != null && firstLocation?.lng != null
+      ? { lat: firstLocation.lat, lng: firstLocation.lng }
+      : defaultCenter
 
   const [map, setMap] = React.useState(null)
 
@@ -42,8 +44,9 @@ const DashboardMap = ({ properties }) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {properties.map((property, index) => (
+      {(properties ?? []).map((property) => (
         <Marker
+          key={property._id}
           position={{
             lat: property?.location?.lat,
             lng: property?.location?.lng,

@@ -7,7 +7,7 @@ const Home = ({ properties }) => {
   console.log(properties)
   return (
     <>
-      {properties && (
+      {properties?.length > 0 ? (
         <div className="main">
           <div className="feed-container">
             <h1>Places to stay near you</h1>
@@ -31,6 +31,16 @@ const Home = ({ properties }) => {
           </div>
           <div className="map">
             <DashboardMap properties={properties} />
+          </div>
+        </div>
+      ) : (
+        <div className="main">
+          <div className="feed-container">
+            <h1>No properties available</h1>
+            <p>Check back soon for listings near you.</p>
+          </div>
+          <div className="map">
+            <DashboardMap properties={[]} />
           </div>
         </div>
       )}
