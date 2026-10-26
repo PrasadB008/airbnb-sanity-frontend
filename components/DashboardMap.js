@@ -44,12 +44,17 @@ const DashboardMap = ({ properties }) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {(properties ?? []).map((property) => (
+      {(properties ?? [])
+        .filter(
+          (property) =>
+            property?.location?.lat != null && property?.location?.lng != null
+        )
+        .map((property) => (
         <Marker
           key={property._id}
           position={{
-            lat: property?.location?.lat,
-            lng: property?.location?.lng,
+            lat: property.location.lat,
+            lng: property.location.lng,
           }}
           icon={{
             url: image,
