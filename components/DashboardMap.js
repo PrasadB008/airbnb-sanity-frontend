@@ -2,22 +2,24 @@ import React from "react"
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api"
 
 const DashboardMap = ({ properties }) => {
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.googlePlacesAPI,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   })
 
-  console.log(properties[0].location?.lat)
-  console.log(properties[0].location?.lat)
   const containerStyle = {
     width: "100%",
     height: "100vh",
   }
 
-  const center = {
-    lat: properties[0].location?.lat,
-    lng: properties[0].location?.lng,
-  }
+  // Fallback center used when there are no properties (San Francisco)
+  const defaultCenter = { lat: 37.7749, lng: -122.4194 }
+
+  const firstLocation = properties?.[0]?.location
+  const center =
+    firstLocation?.lat != null && firstLocation?.lng != null
+      ? { lat: firstLocation.lat, lng: firstLocation.lng }
+      : defaultCenter
 
   const [map, setMap] = React.useState(null)
 
@@ -34,6 +36,10 @@ const DashboardMap = ({ properties }) => {
   const image =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
 
+  if (loadError) {
+    return <p>The map could not be loaded.</p>
+  }
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -42,11 +48,17 @@ const DashboardMap = ({ properties }) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {properties.map((property, index) => (
+      {(properties ?? [])
+        .filter(
+          (property) =>
+            property?.location?.lat != null && property?.location?.lng != null
+        )
+        .map((property) => (
         <Marker
+          key={property._id}
           position={{
-            lat: property?.location?.lat,
-            lng: property?.location?.lng,
+            lat: property.location.lat,
+            lng: property.location.lng,
           }}
           icon={{
             url: image,
