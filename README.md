@@ -71,7 +71,13 @@ First, install the packages:
 npm i
 ```
 
-Second, run the development server:
+Second, add your Google Maps API key. Create a `.env.local` file in the project root (see `.env.local.example`):
+```bash
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-key-here
+```
+The `NEXT_PUBLIC_` prefix is required so Next.js exposes the key to the browser. This replaces the old `googlePlacesAPI` variable.
+
+Third, run the development server:
 
 ```bash
 npm run dev

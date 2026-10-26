@@ -2,9 +2,9 @@ import React from "react"
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api"
 
 const DashboardMap = ({ properties }) => {
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.googlePlacesAPI,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   })
 
   const containerStyle = {
@@ -35,6 +35,10 @@ const DashboardMap = ({ properties }) => {
 
   const image =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+
+  if (loadError) {
+    return <p>The map could not be loaded.</p>
+  }
 
   return isLoaded ? (
     <GoogleMap
