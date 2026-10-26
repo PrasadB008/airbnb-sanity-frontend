@@ -7,7 +7,15 @@ const Home = ({ properties }) => {
   console.log(properties)
   return (
     <>
-      {properties && (
+      {(!properties || properties.length === 0) && (
+        <div className="main">
+          <div className="feed-container">
+            <h1>No properties available</h1>
+            <p>Check back soon for new listings.</p>
+          </div>
+        </div>
+      )}
+      {properties && properties.length > 0 && (
         <div className="main">
           <div className="feed-container">
             <h1>Places to stay near you</h1>
