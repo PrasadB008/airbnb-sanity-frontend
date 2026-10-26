@@ -12,6 +12,7 @@ const Home = ({ properties }) => {
           <div className="feed-container">
             <h1>Places to stay near you</h1>
             <div className="feed">
+              {properties.length === 0 && <p>No places to stay yet.</p>}
               {properties.map((property) => (
                 <Link href={`property/${property.slug.current}`}>
                   <div key={property._id} className="card">
@@ -30,7 +31,7 @@ const Home = ({ properties }) => {
             </div>
           </div>
           <div className="map">
-            <DashboardMap properties={properties} />
+            {properties.length > 0 && <DashboardMap properties={properties} />}
           </div>
         </div>
       )}
