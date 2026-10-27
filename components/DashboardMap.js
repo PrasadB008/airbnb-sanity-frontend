@@ -1,23 +1,32 @@
 import React from "react"
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api"
 
+const DEFAULT_CENTER = { lat: 51.5072, lng: -0.1276 }
+
 const DashboardMap = ({ properties }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.googlePlacesAPI,
   })
 
-  console.log(properties[0].location?.lat)
-  console.log(properties[0].location?.lat)
   const containerStyle = {
     width: "100%",
     height: "100vh",
   }
 
-  const center = {
-    lat: properties[0].location?.lat,
-    lng: properties[0].location?.lng,
-  }
+  const hasCoordinates = (property) =>
+    Number.isFinite(property?.location?.lat) &&
+    Number.isFinite(property?.location?.lng)
+
+  const locatedProperties = (properties ?? []).filter(hasCoordinates)
+
+  // Centre on the first property that has coordinates; otherwise use London.
+  const center = locatedProperties.length
+    ? {
+        lat: locatedProperties[0].location.lat,
+        lng: locatedProperties[0].location.lng,
+      }
+    : DEFAULT_CENTER
 
   const [map, setMap] = React.useState(null)
 
@@ -34,6 +43,10 @@ const DashboardMap = ({ properties }) => {
   const image =
     "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
 
+  if (!properties?.length) {
+    return <></>
+  }
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -42,11 +55,12 @@ const DashboardMap = ({ properties }) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {properties.map((property, index) => (
+      {locatedProperties.map((property) => (
         <Marker
+          key={property._id}
           position={{
-            lat: property?.location?.lat,
-            lng: property?.location?.lng,
+            lat: property.location.lat,
+            lng: property.location.lng,
           }}
           icon={{
             url: image,
