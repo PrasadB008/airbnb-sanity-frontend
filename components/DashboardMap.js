@@ -1,6 +1,8 @@
 import React from "react"
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api"
 
+const DEFAULT_CENTER = { lat: 51.5072, lng: -0.1276 }
+
 const DashboardMap = ({ properties }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -12,11 +14,19 @@ const DashboardMap = ({ properties }) => {
     height: "100vh",
   }
 
-  const firstLocation = properties?.[0]?.location
-  const center = {
-    lat: firstLocation?.lat ?? 0,
-    lng: firstLocation?.lng ?? 0,
-  }
+  const hasCoordinates = (property) =>
+    Number.isFinite(property?.location?.lat) &&
+    Number.isFinite(property?.location?.lng)
+
+  const locatedProperties = (properties ?? []).filter(hasCoordinates)
+
+  // Centre on the first property that has coordinates; otherwise use London.
+  const center = locatedProperties.length
+    ? {
+        lat: locatedProperties[0].location.lat,
+        lng: locatedProperties[0].location.lng,
+      }
+    : DEFAULT_CENTER
 
   const [map, setMap] = React.useState(null)
 
@@ -45,11 +55,12 @@ const DashboardMap = ({ properties }) => {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {properties.map((property, index) => (
+      {locatedProperties.map((property) => (
         <Marker
+          key={property._id}
           position={{
-            lat: property?.location?.lat,
-            lng: property?.location?.lng,
+            lat: property.location.lat,
+            lng: property.location.lng,
           }}
           icon={{
             url: image,
